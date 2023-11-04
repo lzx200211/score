@@ -80,28 +80,16 @@ def upload_file():
 
 @app.route('/send_email', methods=['POST'])
 def send_email(sender_email='2449165916@qq.com', sender_password = 'gfgkprtzfibuebbj', receiver_email = '3475869824@qq.com', subject = '成绩报告单' ):
-    # sender_email = 'your_sender_email@qq.com'  # 发件人邮箱
-    # sender_password = 'your_sender_password'  # 发件人邮箱密码
-    # receiver_email = 'receiver_email@example.com'  # 收件人邮箱
-    # subject = '邮件主题'
-    # message = '邮件内容'
-
-    # stu = import_excel('C:/University/大三上课程/软件工程/现场编程/uploads/成绩单.xlsx')
-    # stu = import_excel(os.path.join(app.config['UPLOAD_FOLDER'], '成绩单.xlsx'))
     stu = import_excel(os.path.join(app.config['UPLOAD_FOLDER'], '成绩表.xlsx'))
-    # stu = import_excel('C:\\University\\222.xlsx')
-    # stu = import_excel('c:\\University\\大三上课程\\软件工程\\现场编程\\uploads\\成绩单.xlsx')
-    # stu = import_excel(r'c:\University\大三上课程\软件工程\现场编程\uploads\成绩表.xlsx')
-    print(stu)
-    print(len(stu))
+    # print(stu)
+    # print(len(stu))
     k =len(stu)
     sender_email = '2449165916@qq.com'
     sender_password = 'gfgkprtzfibuebbj'
     receiver_email = '1161477176@qq.com'
     for i in range(k):
-        print(k)
-   
-        print(i)
+        # print(k)
+        # print(i)
         name = stu[i][0]
         subject = '成绩报告单'
         results = stu[i][1]
@@ -119,8 +107,6 @@ def send_email(sender_email='2449165916@qq.com', sender_password = 'gfgkprtzfibu
 
         教务处'''
 
-        
-
         # 设置邮件内容和格式
         msg = MIMEText(message, 'plain', 'utf-8')
         msg['From'] = sender_email
@@ -135,11 +121,13 @@ def send_email(sender_email='2449165916@qq.com', sender_password = 'gfgkprtzfibu
             # 发送邮件
             server.sendmail(sender_email, [receiver_email], msg.as_string())
             server.quit()
-
-            # return jsonify({'message': '邮件发送成功！'})
+            print('邮件发送成功！')
 
         except Exception as e:
             return jsonify({'error': f"发送邮件出错：{e}"})
+
+    return jsonify({'message': '所有邮件已成功发送！'})
+    
 
 
 
