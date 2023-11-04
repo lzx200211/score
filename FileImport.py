@@ -56,31 +56,35 @@ def output(name,subject):
     result=result+"希望您能够对自己的成绩感到满意，并继续保持努力和积极的学习态度。如果您在某些科目上没有达到预期的成绩，不要灰心，这也是学习过程中的一部分。我们鼓励您与您的任课教师或辅导员进行交流，他们将很乐意为您解答任何疑问并提供帮助。请记住，学习是一个持续不断的过程，我们相信您有能力克服困难并取得更大的进步。"+"\n"
     result=result+"再次恭喜您，祝您学习进步、事业成功！\n"
     result=result+"教务处\n"
-    send_email('2505565012@qq.com', '20021003cnwby', '2194958319@qq.com', "成绩通知", result)
-    print(result)#邮件内容在result
+    send_mail(result)
+    #邮件内容在result
 
-def send_email(sender_email, sender_password, receiver_email, subject, message):
-    # 设置邮件内容和格式
-    msg = MIMEText(message, 'plain', 'utf-8')
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = Header(subject, 'utf-8')
+def send_mail(result):
+    # 发件人邮箱账号
+    sender = '2505565012@qq.com'
+    # 发件人邮箱smtp授权码
+    password = 'flpcrduxyrlxebdb'
 
+    # 收件人邮箱账号
+    receiver = '2194958319@qq.com'
+
+    # 邮件主题和正文
+    subject = '成绩通知'
+    text = result
+
+    # 创建 MIMEText 对象
+    message = MIMEText(text, 'plain', 'utf-8')
+    message['From'] = sender
+    message['To'] = receiver
+    message['Subject'] = Header(subject, 'utf-8')
+
+    # 发送邮件
     try:
-        # 连接QQ邮箱的SMTP服务器
-        server = smtplib.SMTP_SSL('smtp.qq.com', 465)
-        server.login(sender_email, sender_password)
+        smtpObj = smtplib.SMTP_SSL('smtp.qq.com', 465)
+        smtpObj.login(sender, password)
+        smtpObj.sendmail(sender, receiver, message.as_string())
+        print('邮件发送成功')
+    except smtplib.SMTPException as e:
+        print('邮件发送失败，错误信息：', e)
 
-        # 发送邮件
-        server.sendmail(sender_email, [receiver_email], msg.as_string())
-        print("邮件发送成功！")
-
-    except Exception as e:
-        print(f"发送邮件出错：{e}")
-
-    finally:
-        # 关闭连接
-        server.quit()
-
-# 测试发送邮件
 FileImport()
