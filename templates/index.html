@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>文件上传示例</title>
+    <title>成绩单发送</title>
 </head>
 <body>
-    <h1>文件上传示例</h1>
+    <h1>成绩单发送--海底小纵队</h1>
 
     <input type="file" id="fileInput">
     <button id="uploadButton">上传文件</button>
+    <button id="sendEmailButton">发送邮件</button>
 
     <div id="response"></div>
 
     <script>
         var fileInput = document.getElementById("fileInput");
         var uploadButton = document.getElementById("uploadButton");
+        var sendEmailButton = document.getElementById("sendEmailButton");
         var responseElement = document.getElementById("response");
 
         uploadButton.addEventListener("click", function() {
@@ -37,6 +39,21 @@
             } else {
                 responseElement.textContent = '请选择要上传的文件';
             }
+        });
+
+        sendEmailButton.addEventListener("click", function() {
+            // 这里触发发送邮件的请求
+            fetch('/send_email', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                responseElement.textContent = data.message;
+            })
+            .catch(error => {
+                responseElement.textContent = '发送邮件时发生错误';
+                console.error(error);
+            });
         });
     </script>
 </body>
