@@ -23,6 +23,9 @@ def allowed_file(filename):
 
 # 导入Excel文件
 def import_excel(file_path):
+    if not os.path.exists(file_path):
+        print(f"文件 '{file_path}' 不存在")
+        return None
     try:
         df = pd.read_excel(file_path)  # 使用pandas库的read_excel函数读取Excel文件
         df = df.replace('\xa0', '', regex=True)
@@ -32,7 +35,7 @@ def import_excel(file_path):
         student = []
 
         k = 0
-        for i in range(0, len(data)):
+        for i in range(1, len(data)):
             name = data[i][2]
             course = data[i][3]
             grade = data[i][6]
@@ -59,6 +62,7 @@ def upload_file():
     file = request.files['file']
 
     if file.filename == '':
+        print(file.filename)
         return jsonify({'error': 'No selected file'})
 
     if file and allowed_file(file.filename):
@@ -81,50 +85,61 @@ def send_email(sender_email='2449165916@qq.com', sender_password = 'gfgkprtzfibu
     # receiver_email = 'receiver_email@example.com'  # 收件人邮箱
     # subject = '邮件主题'
     # message = '邮件内容'
-    stu = import_excel('C:\\University\\222.xlsx')
-    print(stu)
 
+    # stu = import_excel('C:/University/大三上课程/软件工程/现场编程/uploads/成绩单.xlsx')
+    # stu = import_excel(os.path.join(app.config['UPLOAD_FOLDER'], '成绩单.xlsx'))
+    stu = import_excel(os.path.join(app.config['UPLOAD_FOLDER'], '成绩表.xlsx'))
+    # stu = import_excel('C:\\University\\222.xlsx')
+    # stu = import_excel('c:\\University\\大三上课程\\软件工程\\现场编程\\uploads\\成绩单.xlsx')
+    # stu = import_excel(r'c:\University\大三上课程\软件工程\现场编程\uploads\成绩表.xlsx')
+    print(stu)
+    print(len(stu))
+    k =len(stu)
     sender_email = '2449165916@qq.com'
     sender_password = 'gfgkprtzfibuebbj'
-    receiver_email = '3475869824@qq.com'
-    name = stu[1][0]
-    subject = '成绩报告单'
-    results = stu[1][1]
-    message = f'''亲爱的{name}同学:
+    receiver_email = '1161477176@qq.com'
+    for i in range(k):
+        print(k)
+   
+        print(i)
+        name = stu[i][0]
+        subject = '成绩报告单'
+        results = stu[i][1]
+        message = f'''亲爱的{name}同学:
 
-祝贺您顺利完成本学期的学习！教务处在此向您发送最新的成绩单。
+        祝贺您顺利完成本学期的学习！教务处在此向您发送最新的成绩单。
 
-{results}
+        {results}
 
-……
+        ……
 
-希望您能够对自己的成绩感到满意，并继续保持努力和积极的学习态度。如果您在某些科目上没有达到预期的成绩，不要灰心，这也是学习过程中的一部分。我们鼓励您与您的任课教师或辅导员进行交流，他们将很乐意为您解答任何疑问并提供帮助。请记住，学习是一个持续不断的过程，我们相信您有能力克服困难并取得更大的进步。
+        希望您能够对自己的成绩感到满意，并继续保持努力和积极的学习态度。如果您在某些科目上没有达到预期的成绩，不要灰心，这也是学习过程中的一部分。我们鼓励您与您的任课教师或辅导员进行交流，他们将很乐意为您解答任何疑问并提供帮助。请记住，学习是一个持续不断的过程，我们相信您有能力克服困难并取得更大的进步。
 
-再次恭喜您，祝您学习进步、事业成功！
+        再次恭喜您，祝您学习进步、事业成功！
 
-教务处'''
+        教务处'''
 
-    
+        
 
-    # 设置邮件内容和格式
-    msg = MIMEText(message, 'plain', 'utf-8')
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = Header(subject, 'utf-8')
+        # 设置邮件内容和格式
+        msg = MIMEText(message, 'plain', 'utf-8')
+        msg['From'] = sender_email
+        msg['To'] = receiver_email
+        msg['Subject'] = Header(subject, 'utf-8')
 
-    try:
-        # 连接QQ邮箱的SMTP服务器
-        server = smtplib.SMTP_SSL('smtp.qq.com', 465)
-        server.login(sender_email, sender_password)
+        try:
+            # 连接QQ邮箱的SMTP服务器
+            server = smtplib.SMTP_SSL('smtp.qq.com', 465)
+            server.login(sender_email, sender_password)
 
-        # 发送邮件
-        server.sendmail(sender_email, [receiver_email], msg.as_string())
-        server.quit()
+            # 发送邮件
+            server.sendmail(sender_email, [receiver_email], msg.as_string())
+            server.quit()
 
-        return jsonify({'message': '邮件发送成功！'})
+            # return jsonify({'message': '邮件发送成功！'})
 
-    except Exception as e:
-        return jsonify({'error': f"发送邮件出错：{e}"})
+        except Exception as e:
+            return jsonify({'error': f"发送邮件出错：{e}"})
 
 
 
