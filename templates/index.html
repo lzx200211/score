@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>文件上传示例</title>
+</head>
+<body>
+    <h1>文件上传示例</h1>
+
+    <input type="file" id="fileInput">
+    <button id="uploadButton">上传文件</button>
+
+    <div id="response"></div>
+
+    <script>
+        var fileInput = document.getElementById("fileInput");
+        var uploadButton = document.getElementById("uploadButton");
+        var responseElement = document.getElementById("response");
+
+        uploadButton.addEventListener("click", function() {
+            var file = fileInput.files[0];
+            if (file) {
+                var formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    responseElement.textContent = data.message;
+                })
+                .catch(error => {
+                    responseElement.textContent = '上传文件时发生错误';
+                    console.error(error);
+                });
+            } else {
+                responseElement.textContent = '请选择要上传的文件';
+            }
+        });
+    </script>
+</body>
+</html>
