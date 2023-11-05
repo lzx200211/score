@@ -84,8 +84,8 @@ def send_email(sender_email='2449165916@qq.com', sender_password = 'gfgkprtzfibu
     # print(stu)
     # print(len(stu))
     k =len(stu)
-    sender_email = '2449165916@qq.com'
-    sender_password = 'gfgkprtzfibuebbj'
+    sender_email = '2064583783@qq.com'
+    sender_password = 'ymxgkrgmxaxvbcec'
     receiver_email = '1161477176@qq.com'
     for i in range(k):
         # print(k)
